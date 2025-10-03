@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:controller="com.emo_tunes.javafxapp.LandingPageController"
+      xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="30"
+      prefWidth="700" prefHeight="500">
+
+    <!-- Title -->
+    <Label text="Welcome to EMOTunes!" textFill="WHITE">
+        <font>
+            <Font name="Arial" size="32" />
+        </font>
+    </Label>
+
+    <!-- Top row: Happy, Love, Uplift -->
+    <HBox alignment="CENTER" spacing="20" prefHeight="150">
+        <VBox fx:id="happyBox" alignment="CENTER" prefWidth="120" prefHeight="120"
+              style="-fx-background-color: #FFA94D; -fx-background-radius: 15;">
+            <Label text="Happy" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="16" />
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox fx:id="loveBox" alignment="CENTER" prefWidth="120" prefHeight="120"
+              style="-fx-background-color: #F472B6; -fx-background-radius: 15;">
+            <Label text="Love" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="16" />
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox fx:id="upliftBox" alignment="CENTER" prefWidth="120" prefHeight="120"
+              style="-fx-background-color: #38BDF8; -fx-background-radius: 15;">
+            <Label text="Uplift" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="16" />
+                </font>
+            </Label>
+        </VBox>
+    </HBox>
+
+    <!-- Bottom row: Sad, Rage -->
+    <HBox alignment="CENTER" spacing="20" prefHeight="150">
+        <VBox fx:id="sadBox" alignment="CENTER" prefWidth="120" prefHeight="120"
+              style="-fx-background-color: #1E3A5F; -fx-background-radius: 15;">
+            <Label text="Sad" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="16" />
+                </font>
+            </Label>
+        </VBox>
+
+        <VBox fx:id="rageBox" alignment="CENTER" prefWidth="120" prefHeight="120"
+              style="-fx-background-color: #B91C1C; -fx-background-radius: 15;">
+            <Label text="Rage" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="16" />
+                </font>
+            </Label>
+        </VBox>
+    </HBox>
+
+    <!-- Padding -->
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+</VBox>

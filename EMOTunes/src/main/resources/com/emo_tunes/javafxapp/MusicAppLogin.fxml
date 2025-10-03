@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.emo_tunes.javafxapp.MusicAppLoginController"
+      alignment="CENTER" spacing="20" style="-fx-background-color: linear-gradient(to bottom right, #61107c, #090101);"
+      prefWidth="500" prefHeight="600">
+
+    <Label text="EMOTunes" style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+    <ImageView fx:id="appLogo" fitWidth="230" fitHeight="200"/>
+    <Button text="Connect with Spotify" fx:id="spotifyButton" prefWidth="250" prefHeight="50"/>
+</VBox>
