@@ -11,13 +11,16 @@ import javafx.stage.Stage;
 
 public class LandingPage {
 
-    public static Scene createScene(Stage stage) {
+    // Updated method to accept UserInfo
+    public static Scene createScene(Stage stage, UserInfo userInfo) {
         VBox root = new VBox(30);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new javafx.geometry.Insets(30));
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, #00bfff, #1e90ff);");
 
-        Label title = new Label("Welcome to EMOTunes!");
+        // Show personalized welcome message
+        String username = (userInfo != null && userInfo.getUsername() != null) ? userInfo.getUsername() : "Guest";
+        Label title = new Label("Welcome, " + username + "!");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 32));
         title.setTextFill(Color.WHITE);
 
