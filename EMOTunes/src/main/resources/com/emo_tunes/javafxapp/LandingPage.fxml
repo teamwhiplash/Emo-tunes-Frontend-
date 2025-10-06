@@ -42,7 +42,7 @@
             <padding>
                 <Insets top="30" right="10" bottom="10" left="10"/>
             </padding>
-            <Label fx:id="sidebarPlaylists" text="Playlists"/>
+            <Label fx:id="sidebarPlaylists" text="Playlists" onMouseClicked="#handleSidebarPlaylistsClick" />
             <Label fx:id="sidebarEmolists" text="EmoLists"/>
             <Label fx:id="sidebarLogout" text="Logout"/>
             <VBox VBox.vgrow="ALWAYS"/>
