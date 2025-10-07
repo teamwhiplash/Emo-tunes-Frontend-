@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane fx:controller="com.emo_tunes.javafxapp.PlaylistPageController"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@landingpage.css"
+            prefWidth="800" prefHeight="600">
+
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT" style="-fx-padding: 20;">
+            <Label text="Your Spotify Playlists" styleClass="playlist-title" />
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-pref-height: 550;">
+                <VBox fx:id="playlistContainer" spacing="15">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>
