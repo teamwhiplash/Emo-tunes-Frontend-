@@ -30,27 +30,35 @@
 }
 
 /* ---------- Search Field ---------- */
-#searchField {
-    -fx-background-radius: 12;
-    -fx-background-color: #5D3A80;
-    -fx-text-fill: #FFFFFF;
-    -fx-prompt-text-fill: #D3D3D3;
+.search-field {
+    -fx-background-radius: 12 0 0 12; /* round left corners only */
+    -fx-background-color: #F1F3F5;
+    -fx-text-fill: #333333;
+    -fx-prompt-text-fill: #888888;
     -fx-font-family: 'Segoe UI';
-    -fx-font-weight: bold;
-    -fx-font-style: italic;
-
     -fx-font-size: 20px;
     -fx-cursor: text;
-    -fx-padding: 15px;
-    -fx-border-radius: 7px;
-    -fx-border-color: #7A3EB1;
-    -fx-border-width: 1;
+    -fx-padding: 10 10 10 15; /* adjust padding to reduce height */
+    -fx-border-radius: 12 0 0 12;
+    -fx-border-color: #CED4DA;
+    -fx-border-width: 1 0 1 1; /* remove right border so it blends with button */
 }
 
-#searchField:hover {
-    -fx-background-color: #6A4DB0;
+/* Hover effect */
+.search-field:hover {
+    -fx-background-color: #E9ECEF;
 }
 
+/* Button styling */
+.search-button {
+    -fx-background-radius: 0 12 12 0; /* round right corners */
+    -fx-background-color: #6C63FF;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-border-color: #CED4DA;
+    -fx-border-width: 1 1 1 0; /* remove left border so it blends with field */
+    -fx-cursor: hand;
+}
 /* ---------- User Profile ---------- */
 #profileIcon {
     -fx-background-color: #7A3EB1;
@@ -216,5 +224,43 @@
 .song-label {
     -fx-text-fill: #DDDDDD;
     -fx-font-size: 14px;
+}
+.create-playlist-btn {
+    -fx-background-color: linear-gradient(to right, #8E2DE2, #4A00E0);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 8, 0, 0, 3);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.create-playlist-btn:hover {
+    -fx-background-color: linear-gradient(to right, #9D50BB, #6E48AA);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-effect: dropshadow(three-pass-box, rgba(142,45,226,0.6), 15, 0, 0, 5);
+}
+
+.create-playlist-btn:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-opacity: 0.9;
+}
+
+.playlist-name {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.song-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 3 8;
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 10;
 }
 

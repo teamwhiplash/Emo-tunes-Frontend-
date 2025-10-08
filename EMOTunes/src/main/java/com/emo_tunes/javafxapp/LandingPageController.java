@@ -1,24 +1,39 @@
 package com.emo_tunes.javafxapp;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.*;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javafx.scene.layout.Pane;   // or StackPane/VBox depending on your mainContentPane
+import java.io.IOException;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Random;
+
+// If you are passing user info
+import com.emo_tunes.javafxapp.UserInfo;
 
 public class LandingPageController {
 
@@ -32,15 +47,22 @@ public class LandingPageController {
     @FXML private VBox upliftBox;
     @FXML private VBox sadBox;
     @FXML private VBox rageBox;
+    @FXML private VBox container;
     @FXML private VBox insightBox;
     @FXML private Label sidebarPlaylists;
-    @FXML private StackPane centerStack;
+
     @FXML private Label sidebarEmolists;
     @FXML private Label sidebarLogout;
     @FXML private VBox emotionPopup;
     @FXML private Label popupTitle;
     @FXML private ListView<String> popupListView;
     @FXML private Label closePopup;
+
+    @FXML private Button searchButton;
+
+    @FXML
+    private StackPane mainContentPane;
+
     private UserInfo userInfo;
     @FXML
     private Label titleLabel;
@@ -49,6 +71,9 @@ public class LandingPageController {
 
     @FXML
     private Label insightSubtitle;// your #titleLabel from FXML
+
+    @FXML
+    private AnchorPane resultsPlaceholder;
 
     private final String[] texts = {
             "Welcome to Emotunes",
@@ -73,10 +98,31 @@ public class LandingPageController {
             "Discover tracks to lift your spirits."
     );
     private int currentIndex = 0;
-
     private final Random random = new Random();
 
+    private int limit = 20;
+    private int offset = 0;
+    private String lastQuery = "";
+    private SongResultsViewController songResultsController;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final String BACKEND_URL = "http://localhost:8080/search/song";
+
+
     public void initialize() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emo_tunes/javafxapp/SongResultsView.fxml"));
+            Parent resultsView = loader.load();
+            songResultsController = loader.getController();
+            resultsPlaceholder.getChildren().add(resultsView);
+            AnchorPane.setTopAnchor(resultsView, 0.0);
+            AnchorPane.setBottomAnchor(resultsView, 0.0);
+            AnchorPane.setLeftAnchor(resultsView, 0.0);
+            AnchorPane.setRightAnchor(resultsView, 0.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         sidebarPlaylists.setText("Playlists");
 
@@ -85,6 +131,9 @@ public class LandingPageController {
 
         // Load App Logo safely
         closePopup.setOnMouseClicked(e -> closePopup());
+
+        searchField.setOnAction(e -> fetchSongs(true));
+        searchButton.setOnAction(e -> fetchSongs(true));
 
         FadeTransition fadeOut = new FadeTransition(Duration.millis(500), titleLabel);
         FadeTransition fadeIn = new FadeTransition(Duration.millis(500), titleLabel);
@@ -117,6 +166,112 @@ public class LandingPageController {
         addSidebarHover(sidebarPlaylists);
         addSidebarHover(sidebarEmolists);
         addSidebarHover(sidebarLogout);
+
+        // Animate title and insight text
+        animateTitleText();
+        animateInsightTextSmooth();
+
+        // Pagination buttons
+        // Back button
+        songResultsController.backButton.setOnAction(e -> {
+            if (offset >= limit) {
+                offset -= limit;
+                fetchSongs(false); // fetch previous page
+            } else {
+                // Edge case: first page, go back to emotion view
+                resultsPlaceholder.setVisible(false);
+                resultsPlaceholder.setOpacity(0);
+                container.setVisible(true);
+            }
+        });
+
+        songResultsController.nextButton.setOnAction(e -> {
+            offset += limit;
+            fetchSongs(false);
+        });
+    }
+    // ✅ Fetch songs with optional reset for new search
+    private void fetchSongs(boolean resetOffset) {
+        String query = searchField.getText().trim();
+        if (query.isEmpty()) return;
+
+        if (resetOffset) offset = 0;
+        lastQuery = query;
+
+        UserInfo currentUser = SessionManager.getInstance().getUser();
+        if (currentUser == null) {
+            System.out.println("User not logged in!");
+            return;
+        }
+        int userId = currentUser.getUserId();
+
+        Task<List<SongInfo>> fetchTask = new Task<>() {
+            @Override
+            protected List<SongInfo> call() throws Exception {
+                String apiUrl = BACKEND_URL + "?query=" + query.replace(" ", "%20") +
+                        "&userId=" + userId + "&limit=" + limit + "&offset=" + offset;
+                HttpURLConnection conn = (HttpURLConnection) new URL(apiUrl).openConnection();
+                conn.setRequestMethod("GET");
+                try (InputStream inputStream = conn.getInputStream()) {
+                    return objectMapper.readValue(inputStream, new TypeReference<>() {});
+                }
+            }
+        };
+
+        fetchTask.setOnSucceeded(e -> {
+            List<SongInfo> songs = fetchTask.getValue();
+            songResultsController.clearResults();
+            for (SongInfo song : songs) songResultsController.addSongCard(song);
+
+            // Hide the emotions container
+            container.setVisible(false);
+
+            // Show results placeholder with fade-in
+            resultsPlaceholder.setVisible(true);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(400), resultsPlaceholder);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        });
+
+
+        fetchTask.setOnFailed(e -> {
+            e.getSource().getException().printStackTrace();
+        });
+
+        new Thread(fetchTask).start();
+    }
+
+    private void fetchSongsWithLastQuery() {
+        if (!lastQuery.isEmpty()) {
+            searchField.setText(lastQuery);
+            fetchSongs(false);
+        }
+    }
+    private void showEmotionsAgain() {
+        container.setVisible(true);
+        resultsPlaceholder.setVisible(false);
+        resultsPlaceholder.setOpacity(0);
+    }
+    private void animateTitleText() {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), titleLabel);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), titleLabel);
+
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
+            fadeOut.play();
+            fadeOut.setOnFinished(evt -> {
+                currentIndex = (currentIndex + 1) % texts.length;
+                titleLabel.setText(texts[currentIndex]);
+                fadeIn.play();
+            });
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     private void animateInsightTextSmooth() {
@@ -197,6 +352,28 @@ public class LandingPageController {
         label.setOnMouseExited(e -> label.setStyle("-fx-text-fill: WHITE; -fx-font-family: 'Segoe UI'; -fx-font-size: 18px;"));
     }
 
+    @FXML
+    private void handleSidebarEmoListsClick() {
+        try {
+            // Load the EmoListPage FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EmoListPage.fxml"));
+            Parent emoListPage = loader.load();
+
+            // Optional: pass user info to controller
+            EmoListPageController controller = loader.getController();
+            controller.setUserInfo(userInfo); // if you have a userInfo field
+
+            // Replace main content with EmoListPage
+            mainContentPane.getChildren().setAll(emoListPage);
+
+            // Change sidebar label to Home
+            sidebarEmolists.setText("Home");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Fixed emotion popup
     @FXML
     private void handleEmotionClick(MouseEvent event) {
@@ -234,7 +411,7 @@ public class LandingPageController {
                     controller.setUserInfo(userInfo);
                 }
 
-                centerStack.getChildren().setAll(playlistView);
+                mainContentPane.getChildren().setAll(playlistView);
 
                 // Change sidebar label to "Home"
                 sidebarPlaylists.setText("Home");
