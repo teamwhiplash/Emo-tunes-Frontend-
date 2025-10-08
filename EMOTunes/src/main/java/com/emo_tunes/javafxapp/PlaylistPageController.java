@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import javafx.scene.control.Button;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,55 @@ public class PlaylistPageController {
     @FXML
     private VBox playlistContainer;
 
+    @FXML
+    private Button createPlaylistBtn;
+
+    @FXML
+    private void handleCreatePlaylist() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Name your new playlist");
+        dialog.setContentText("Playlist name:");
+
+        dialog.showAndWait().ifPresent(name -> {
+            System.out.println("Creating playlist: " + name);
+
+            // Example: Add it to the UI immediately
+            String[] demoSongs = {"New Song 1", "New Song 2"};
+            playlistContainer.getChildren().add(0, createPlaylistCard(name,
+                    "https://i.scdn.co/image/ab67616d0000b2732db7ff835f7a3d7ff7e6b6c9", demoSongs));
+
+            // TODO: Optionally call backend API to persist it
+        });
+    }
+
+//FOR CALLING BACKEND API TO PERSIST CREATED PLAYLIST
+//    @FXML
+//    private void handleCreatePlaylist() {
+//        TextInputDialog dialog = new TextInputDialog();
+//        dialog.setTitle("Create Playlist");
+//        dialog.setHeaderText("Name your new playlist");
+//        dialog.setContentText("Playlist name:");
+//
+//        dialog.showAndWait().ifPresent(name -> {
+//            try {
+//                // Example REST API call
+//                HttpClient client = HttpClient.newHttpClient();
+//                HttpRequest request = HttpRequest.newBuilder()
+//                        .uri(URI.create("http://localhost:8080/api/playlists"))
+//                        .header("Content-Type", "application/json")
+//                        .POST(HttpRequest.BodyPublishers.ofString("{\"name\":\"" + name + "\"}"))
+//                        .build();
+//
+//                client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                        .thenAccept(response -> System.out.println("Saved: " + response.body()));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
+
+
     // Map of playlists and their songs (example data)
     private final Map<String, List<String>> playlistsToSongs = new HashMap<>();
 
@@ -37,7 +88,7 @@ public class PlaylistPageController {
     public void initialize() {
         for (int i = 1; i <= 3; i++) {
             String name = "Playlist " + i;
-            String coverImage = "https://i.scdn.co/image/ab67616d0000b2732db7ff835f7a3d7ff7e6b6c9"; // Replace with real image from backend URL
+            String coverImage = "https://thumbs.dreamstime.com/b/music-notes-heart-simple-illustration-shape-treble-clef-white-background-70248786.jpg"; // Replace with real image from backend URL
             String[] songs = {
                     "Song 1 from " + name,
                     "Song 2 from " + name,
@@ -63,42 +114,81 @@ public class PlaylistPageController {
         Label label = new Label(name);
         label.getStyleClass().add("playlist-name");
 
-        VBox textBox = new VBox(label);
-        textBox.setAlignment(Pos.CENTER_LEFT);
-        textBox.setSpacing(5);
-
         VBox songListBox = new VBox();
         songListBox.setSpacing(5);
         songListBox.setVisible(false);
         songListBox.setManaged(false);
 
+        // Add existing songs (if any)
         for (String song : songs) {
             Label songLabel = new Label("♪ " + song);
             songLabel.getStyleClass().add("song-label");
             songListBox.getChildren().add(songLabel);
         }
 
-        VBox rightBox = new VBox(textBox, songListBox);
+        Button addSongBtn = new Button("+ Add Song");
+        addSongBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #89f7fe, #66a6ff);" +
+                        "-fx-text-fill: white; -fx-font-weight: bold;" +
+                        "-fx-background-radius: 20; -fx-padding: 6 14; -fx-cursor: hand;"
+        );
+        addSongBtn.setOnMouseEntered(e -> addSongBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #66a6ff, #89f7fe);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-padding: 6 14;" +
+                        "-fx-cursor: hand;"
+        ));
+
+        addSongBtn.setOnMouseExited(e -> addSongBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #89f7fe, #66a6ff);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-padding: 6 14;" +
+                        "-fx-cursor: hand;"
+        ));
+
+
+        addSongBtn.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Add Song");
+            dialog.setHeaderText("Add a song to " + name);
+            dialog.setContentText("Song Name:");
+
+            dialog.showAndWait().ifPresent(song -> {
+                if (!song.trim().isEmpty()) {
+                    Label songLabel = new Label("♪ " + song);
+                    songLabel.getStyleClass().add("song-label");
+                    songListBox.getChildren().add(songLabel);
+                    songListBox.setVisible(true);
+                    songListBox.setManaged(true);
+                }
+            });
+        });
+
+        VBox rightBox = new VBox(label, addSongBtn, songListBox);
         rightBox.setAlignment(Pos.CENTER_LEFT);
         rightBox.setSpacing(10);
 
         HBox card = new HBox(20, cover, rightBox);
         card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(15));
-        card.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); " +
+        card.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);" +
                 "-fx-background-radius: 15; -fx-cursor: hand;");
         card.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.25)));
-
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: rgba(60, 60, 60, 0.6); " +
-                "-fx-background-radius: 15; -fx-cursor: hand;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); " +
-                "-fx-background-radius: 15; -fx-cursor: hand;"));
 
         card.setOnMouseClicked(e -> {
             boolean visible = songListBox.isVisible();
             songListBox.setVisible(!visible);
             songListBox.setManaged(!visible);
         });
+
+        card.setOnMouseEntered(e ->
+                card.setStyle("-fx-background-color: rgba(60, 60, 60, 0.6); -fx-background-radius: 15;"));
+        card.setOnMouseExited(e ->
+                card.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 15;"));
 
         return card;
     }

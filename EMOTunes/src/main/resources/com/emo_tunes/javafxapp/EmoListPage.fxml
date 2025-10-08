@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.emo_tunes.javafxapp.EmoListPageController"
+            fitToWidth="true">
+
+    <VBox fx:id="emolistContainer" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Your EmoLists" styleClass="playlist-title"/>
+            <Button fx:id="createEmoListBtn" text="+ Create EmoList"
+                    styleClass="create-playlist-btn" onAction="#handleCreateEmoList"/>
+        </HBox>
+        <!-- EmoLists will be dynamically added here -->
+    </VBox>
+</ScrollPane>
