@@ -190,6 +190,43 @@ public class LandingPageController {
             fetchSongs(false);
         });
     }
+    private void switchContent(String fxmlPath, Label sidebarLabel, String defaultText) {
+        try {
+            if (sidebarLabel.getText().equals(defaultText)) {
+                // Load target FXML (like EmoList or Playlist)
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent page = loader.load();
+
+                Object controller = loader.getController();
+
+                // Pass user info if supported
+                if (controller instanceof UserAwareController) {
+                    ((UserAwareController) controller).setUserInfo(userInfo);
+                }
+
+                // Replace main content inside StackPane
+                mainContentPane.getChildren().setAll(page);
+
+                // Change sidebar label to "Home"
+                sidebarLabel.setText("Home");
+
+            } else {
+                // Go back to LandingPage.fxml
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emo_tunes/javafxapp/LandingPage.fxml"));
+                Parent landingPage = loader.load();
+
+                LandingPageController controller = loader.getController();
+                controller.setUserInfo(userInfo);
+
+                // Replace scene root with landing page
+                sidebarLabel.getScene().setRoot(landingPage);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // ✅ Fetch songs with optional reset for new search
     private void fetchSongs(boolean resetOffset) {
         String query = searchField.getText().trim();
@@ -354,26 +391,8 @@ public class LandingPageController {
 
     @FXML
     private void handleSidebarEmoListsClick() {
-        try {
-            // Load the EmoListPage FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EmoListPage.fxml"));
-            Parent emoListPage = loader.load();
-
-            // Optional: pass user info to controller
-            EmoListPageController controller = loader.getController();
-            controller.setUserInfo(userInfo); // if you have a userInfo field
-
-            // Replace main content with EmoListPage
-            mainContentPane.getChildren().setAll(emoListPage);
-
-            // Change sidebar label to Home
-            sidebarEmolists.setText("Home");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchContent("/com/emo_tunes/javafxapp/EmoListPage.fxml", sidebarEmolists, "EmoLists");
     }
-
     // Fixed emotion popup
     @FXML
     private void handleEmotionClick(MouseEvent event) {
@@ -400,44 +419,8 @@ public class LandingPageController {
 
     @FXML
     private void handleSidebarPlaylistsClick() {
-        if (sidebarPlaylists.getText().equals("Playlists")) {
-            // Load PlaylistPage.fxml
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emo_tunes/javafxapp/PlaylistPage.fxml"));
-                Parent playlistView = loader.load();
-
-                PlaylistPageController controller = loader.getController();
-                if (userInfo != null) {
-                    controller.setUserInfo(userInfo);
-                }
-
-                mainContentPane.getChildren().setAll(playlistView);
-
-                // Change sidebar label to "Home"
-                sidebarPlaylists.setText("Home");
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            // Reload LandingPage.fxml to simulate "Home"
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/emo_tunes/javafxapp/LandingPage.fxml"));
-                Parent landingPage = loader.load();
-
-                // Get controller and pass user info
-                LandingPageController controller = loader.getController();
-                controller.setUserInfo(userInfo);
-
-                Scene scene = sidebarPlaylists.getScene(); // get current scene
-                ((VBox) sidebarPlaylists.getParent()).getScene().setRoot(landingPage);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        switchContent("/com/emo_tunes/javafxapp/PlaylistPage.fxml", sidebarPlaylists, "Playlists");
     }
-
     private void showEmotionPopup(String emotion, List<String> songs) {
         popupTitle.setText("Songs for " + emotion);
         popupListView.getItems().setAll(songs);

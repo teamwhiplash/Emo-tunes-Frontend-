@@ -1,26 +1,38 @@
 package com.emo_tunes.javafxapp;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
-public class EmoListPageController {
+import java.io.IOException;
+
+public class EmoListPageController implements UserAwareController {
 
     @FXML
     private VBox emolistContainer; // VBox in FXML where playlists will be added
 
     @FXML
     private Button createPlaylistBtn;
+
+    // For storing expanded/collapsed state
+    private VBox lastExpandedCard = null;
 
     // This method is called by FXML button
     @FXML
@@ -68,6 +80,7 @@ public class EmoListPageController {
         dialog.showAndWait().ifPresent(this::addEmoPlaylistCard);
     }
 
+
     // Add playlist card to the container
     private void addEmoPlaylistCard(EmoPlaylist playlist) {
         VBox card = new VBox(10);
@@ -83,28 +96,128 @@ public class EmoListPageController {
         emotionLabel.setFont(Font.font("Segoe UI", 14));
         emotionLabel.setTextFill(Color.WHITE);
 
-        HBox songsContainer = new HBox(10);
-        songsContainer.setAlignment(Pos.CENTER_LEFT);
-        songsContainer.setPadding(new Insets(10));
+        VBox songsBox = new VBox(10);
+        songsBox.setAlignment(Pos.CENTER_LEFT);
+        songsBox.setPadding(new Insets(10));
+        songsBox.setVisible(false);
+        songsBox.setManaged(false);
 
-        // Example placeholder songs
+        // ✅ Example placeholder songs
         for (int i = 1; i <= 3; i++) {
-            VBox songCard = new VBox();
+            final int index = i; // make it effectively final
+
+            VBox songCard = new VBox(5);
             songCard.setAlignment(Pos.CENTER);
             songCard.setPadding(new Insets(10));
             songCard.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 10;");
+            songCard.setCursor(javafx.scene.Cursor.HAND);
 
             Rectangle albumArt = new Rectangle(60, 60, Color.WHITE);
-            Label songLabel = new Label("Song " + i);
+            Label songLabel = new Label("Song " + index);
             songLabel.setTextFill(Color.WHITE);
+            songLabel.setFont(Font.font("Segoe UI", 13));
 
             songCard.getChildren().addAll(albumArt, songLabel);
-            songsContainer.getChildren().add(songCard);
+
+            // ✅ Set click handler — pass the card for stage reference
+            songCard.setOnMouseClicked(e -> openSongDetails("Song " + index, card));
+
+            songsBox.getChildren().add(songCard);
         }
 
-        card.getChildren().addAll(nameLabel, emotionLabel, songsContainer);
+        card.getChildren().addAll(nameLabel, emotionLabel, songsBox);
         emolistContainer.getChildren().add(card);
+
+        // Expand / collapse behavior
+        card.setOnMouseClicked(e -> toggleCard(card, songsBox, playlist));
     }
+
+    private void openSongDetails(String songName, VBox parentCard) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SongDetailsPage.fxml"));
+            Parent songDetailsPage = loader.load();
+
+            SongInfo dummySong = new SongInfo();
+            dummySong.setSongName(songName);
+            dummySong.setArtistName("Unknown Artist");
+            dummySong.setReleaseDate("2025-01-01");
+            dummySong.setDuration(210);
+            dummySong.setCoverURL("https://via.placeholder.com/300x300.png?text=" + songName.replace(" ", "+"));
+            dummySong.setSongURL("https://open.spotify.com");
+
+            SongDetailsPageController controller = loader.getController();
+            controller.setSong(dummySong);
+
+            Stage stage = (Stage) parentCard.getScene().getWindow();
+            Scene scene = stage.getScene();
+
+            // ✅ Save current content for back navigation
+            Parent previousContent = scene.getRoot();
+
+            // ✅ Go to song details
+            scene.setRoot(songDetailsPage);
+
+            // ✅ Make Back button restore previous page
+            controller.setOnBack(() -> scene.setRoot(previousContent));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void toggleCard(VBox card, VBox songsBox, EmoPlaylist playlist) {
+        boolean expanding = !songsBox.isVisible();
+
+        if (expanding) {
+            if (lastExpandedCard != null && lastExpandedCard != card) {
+                VBox previousSongs = (VBox) lastExpandedCard.getChildren().get(2);
+                EmoPlaylist prevPlaylist = (EmoPlaylist) lastExpandedCard.getUserData();
+                collapseCard(lastExpandedCard, previousSongs, prevPlaylist);
+            }
+            expandCard(card, songsBox, playlist);
+            lastExpandedCard = card;
+        } else {
+            collapseCard(card, songsBox, playlist);
+            lastExpandedCard = null;
+        }
+    }
+
+    private void expandCard(VBox card, VBox songsBox, EmoPlaylist playlist) {
+        songsBox.setVisible(true);
+        songsBox.setManaged(true);
+
+        double startHeight = card.getHeight();
+        double endHeight = startHeight + songsBox.getChildren().size() * 70 + 20;
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(300),
+                        new KeyValue(card.minHeightProperty(), endHeight))
+        );
+        timeline.play();
+
+        card.setStyle(
+                "-fx-background-color: " + toRgbString(playlist.color) + "; " +
+                        "-fx-background-radius: 15; -fx-cursor: hand;"
+        );
+    }
+
+    private void collapseCard(VBox card, VBox songsBox, EmoPlaylist playlist) {
+        songsBox.setVisible(false);
+        songsBox.setManaged(false);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(300),
+                        new KeyValue(card.minHeightProperty(), 110))
+        );
+        timeline.play();
+
+        card.setStyle(
+                "-fx-background-color: " + toRgbString(playlist.color) + "; " +
+                        "-fx-background-radius: 15; -fx-cursor: hand;"
+        );
+    }
+
 
     // Convert Color to CSS RGB string
     private String toRgbString(Color color) {

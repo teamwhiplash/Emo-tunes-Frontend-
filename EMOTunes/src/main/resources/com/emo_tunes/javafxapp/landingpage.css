@@ -1,65 +1,76 @@
-/* ---------- Root Background ---------- */
+/* ---------- ROOT BACKGROUND ---------- */
 .root {
-    -fx-background-color: linear-gradient(to bottom right, #2C003E, #5A1E8B); /* Dark violet gradient */
+    -fx-background-color: linear-gradient(to bottom right, #000000, #120028, #1E003F);
+    -fx-font-family: "Segoe UI", "Poppins";
+    -fx-text-fill: #FFFFFF;
 }
 
-/* ---------- Top Navbar ---------- */
+/* ---------- TOP NAVBAR ---------- */
 #navbar {
-    -fx-background-color: linear-gradient(to bottom right, #4B0082, #7A3EB1);
-    -fx-padding: 10 20 10 20;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0, 0, 2); /* subtle bottom shadow */
+    -fx-background-color: linear-gradient(to right, rgba(30, 0, 60, 0.9), rgba(80, 0, 130, 0.9));
+    -fx-padding: 10 25 10 25;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 0, 3);
+    -fx-background-radius: 0 0 10 10;
 }
 
-/* ---------- App Logo ---------- */
+/* ---------- APP LOGO ---------- */
 #appLogo {
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4);
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-effect: dropshadow(gaussian, rgba(120, 80, 255, 0.6), 15, 0.5, 0, 0);
     -fx-transition: all 0.3s ease-in-out;
 }
 
 #appLogo:hover {
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
+    -fx-scale-x: 1.12;
+    -fx-scale-y: 1.12;
+    -fx-effect: dropshadow(gaussian, rgba(180, 100, 255, 0.8), 20, 0.6, 0, 0);
 }
 
-/* ---------- App Name ---------- */
+/* ---------- LOGO TEXT ---------- */
 #logoText {
-    -fx-text-fill: #F5F5F5;
-    -fx-font-family: 'Segoe UI Bold';
-    -fx-font-size: 28px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: 'Poppins SemiBold';
+    -fx-font-size: 30px;
+    -fx-effect: dropshadow(gaussian, rgba(160, 100, 255, 0.5), 12, 0.4, 0, 0);
 }
 
-/* ---------- Search Field ---------- */
+/* ---------- SEARCH BAR ---------- */
 .search-field {
-    -fx-background-radius: 12 0 0 12; /* round left corners only */
-    -fx-background-color: #F1F3F5;
-    -fx-text-fill: #333333;
-    -fx-prompt-text-fill: #888888;
-    -fx-font-family: 'Segoe UI';
-    -fx-font-size: 20px;
-    -fx-cursor: text;
-    -fx-padding: 10 10 10 15; /* adjust padding to reduce height */
-    -fx-border-radius: 12 0 0 12;
-    -fx-border-color: #CED4DA;
-    -fx-border-width: 1 0 1 1; /* remove right border so it blends with button */
-}
-
-/* Hover effect */
-.search-field:hover {
-    -fx-background-color: #E9ECEF;
-}
-
-/* Button styling */
-.search-button {
-    -fx-background-radius: 0 12 12 0; /* round right corners */
-    -fx-background-color: #6C63FF;
-    -fx-text-fill: white;
+    -fx-background-radius: 25 0 0 25;
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #F5F5F5;
+    -fx-prompt-text-fill: #AAAAAA;
     -fx-font-size: 16px;
-    -fx-border-color: #CED4DA;
-    -fx-border-width: 1 1 1 0; /* remove left border so it blends with field */
-    -fx-cursor: hand;
+    -fx-border-radius: 25 0 0 25;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1;
+    -fx-padding: 10 15;
 }
-/* ---------- User Profile ---------- */
+
+.search-field:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+}
+
+.search-button {
+    -fx-background-radius: 0 25 25 0;
+    -fx-background-color: linear-gradient(to right, #6C63FF, #9D4EDD);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-border-color: transparent;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s;
+}
+
+.search-button:hover {
+    -fx-background-color: linear-gradient(to right, #7A5FFF, #B678FF);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ---------- PROFILE ---------- */
 #profileIcon {
     -fx-background-color: #7A3EB1;
     -fx-background-radius: 25;
@@ -80,187 +91,122 @@
 }
 
 #profileName {
-    -fx-font-family: 'Segoe UI';
     -fx-font-size: 18px;
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: #EAEAEA;
 }
 
-/* ---------- Sidebar ---------- */
+/* ---------- SIDEBAR ---------- */
 #sidebar {
-    -fx-padding: 30 10 10 10;
-    -fx-background-color: linear-gradient(to bottom, #2B0045, #3A0066);
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 3, 0); /* soft right shadow */
+    -fx-background-color: linear-gradient(to bottom, #0B001C, #190034, #2A0055);
+    -fx-padding: 30 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 3, 0);
 }
 
-
-/* Sidebar Labels */
 #sidebarPlaylists, #sidebarEmolists, #sidebarLogout {
-    -fx-font-family: 'Arial Bold';
     -fx-font-size: 18px;
-    -fx-padding: 10 15 10 40;
-    -fx-background-radius: 8;
-    -fx-alignment: center-left;
+    -fx-text-fill: #CCCCCC;
+    -fx-padding: 12 20;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
     -fx-transition: all 0.3s ease-in-out;
-    -fx-background-color: transparent;
-    -fx-text-fill: #F0F0F0;
 }
 
 #sidebarPlaylists:hover, #sidebarEmolists:hover, #sidebarLogout:hover {
-    -fx-background-color: #4B0082;
+    -fx-background-color: linear-gradient(to right, #6C63FF33, #8A2BE233);
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(150, 90, 255, 0.4), 10, 0, 0, 2);
 }
 
-/* ---------- Insight Box ---------- */
+/* ---------- INSIGHT BOX ---------- */
 .insight-container {
-    -fx-pref-width: 260px;
-    -fx-padding: 15px;
-    -fx-background-color: linear-gradient(to bottom right, #5A1E8B, #7A3EB1);
-    -fx-background-radius: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
-    -fx-alignment: BOTTOM_LEFT;
-}
-
-.insight-box {
-    -fx-alignment: TOP_LEFT;
-    -fx-spacing: 6px;
-    -fx-fill-width: true;
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.15), 10, 0, 0, 3);
 }
 
 .insight-title {
-    -fx-font-family: 'Segoe UI Bold';
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
+    -fx-font-size: 26px;
     -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
 }
 
 .insight-subtitle {
-    -fx-font-family: 'Segoe UI';
     -fx-font-size: 14px;
-    -fx-text-fill: #DDDDDD;
+    -fx-text-fill: #BBBBBB;
 }
 
-/* ---------- Title ---------- */
-#titleLabel {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-family: 'Arial Bold';
-    -fx-font-size: 40px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
-}
-
-/* ---------- Mood Boxes ---------- */
+/* ---------- MOOD BOXES ---------- */
 #happyBox, #loveBox, #upliftBox, #sadBox, #rageBox {
-    -fx-background-radius: 30;
-    -fx-alignment: center;
+    -fx-background-radius: 20;
+    -fx-padding: 25 40;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.5, 0, 6);
     -fx-cursor: hand;
-    -fx-transition: all 0.5s ease-in-out;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.3, 0, 4);
+    -fx-opacity: 0.85;
 }
 
-/* Mood Colors with Gradient */
-#happyBox {
-    -fx-background-color: linear-gradient(to bottom right, #FFF200, #FFB347);
-}
+/* Gradient + Glow for Each Mood */
+#happyBox { -fx-background-color: linear-gradient(to bottom right, #FFEE88, #FFB34733); }
+#loveBox  { -fx-background-color: linear-gradient(to bottom right, #FF66A9, #FF2E5F33); }
+#upliftBox { -fx-background-color: linear-gradient(to bottom right, #00FC61, #00A34433); }
+#sadBox   { -fx-background-color: linear-gradient(to bottom right, #4596FF, #0056CF33); }
+#rageBox  { -fx-background-color: linear-gradient(to bottom right, #FF4040, #B5000033); }
 
-#loveBox {
-    -fx-background-color: linear-gradient(to bottom right, #FF5CB0, #FF2E5F);
-}
-
-#upliftBox {
-    -fx-background-color: linear-gradient(to bottom right, #00FC61, #00A344);
-}
-
-#sadBox {
-    -fx-background-color: linear-gradient(to bottom right, #4596FF, #0056CF);
-}
-
-#rageBox {
-    -fx-background-color: linear-gradient(to bottom right, #FF4040, #B50000);
-}
-
-/* Mood Hover Effects */
 #happyBox:hover, #loveBox:hover, #upliftBox:hover, #sadBox:hover, #rageBox:hover {
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 15, 0.4, 0, 6);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-effect: dropshadow(gaussian, rgba(180,100,255,0.5), 25, 0.7, 0, 5);
 }
 
-/* ---------- Mood Labels ---------- */
+/* ---------- LABELS INSIDE MOOD BOXES ---------- */
 #happyBox Label, #loveBox Label, #upliftBox Label, #sadBox Label, #rageBox Label {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-family: 'Arial Bold';
-    -fx-font-size: 26px;
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins SemiBold";
+    -fx-font-size: 22px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.3), 10, 0.6, 0, 1);
 }
 
-/* ---------- PLAYLIST PAGE---------- */
-
+/* ---------- PLAYLIST PAGE ---------- */
 .playlist-title {
-    -fx-text-fill: white;
+    -fx-text-fill: #FFFFFF;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-padding: 0 0 10 10;
 }
 
-.playlist-name {
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.playlist-name {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-}
-
-.song-label {
-    -fx-text-fill: #DDDDDD;
-    -fx-font-size: 14px;
-}
 .create-playlist-btn {
-    -fx-background-color: linear-gradient(to right, #8E2DE2, #4A00E0);
+    -fx-background-color: linear-gradient(to right, #6C63FF, #9D4EDD);
     -fx-text-fill: white;
-    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 10 25;
+    -fx-font-size: 16px;
     -fx-background-radius: 25;
+    -fx-padding: 10 25;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 8, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(100,50,255,0.5), 12, 0, 0, 4);
     -fx-transition: all 0.3s ease-in-out;
 }
 
 .create-playlist-btn:hover {
-    -fx-background-color: linear-gradient(to right, #9D50BB, #6E48AA);
+    -fx-background-color: linear-gradient(to right, #7A5FFF, #B678FF);
     -fx-scale-x: 1.08;
     -fx-scale-y: 1.08;
-    -fx-effect: dropshadow(three-pass-box, rgba(142,45,226,0.6), 15, 0, 0, 5);
 }
 
-.create-playlist-btn:pressed {
-    -fx-scale-x: 0.97;
-    -fx-scale-y: 0.97;
-    -fx-opacity: 0.9;
-}
-
-.playlist-name {
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
+/* ---------- SONG LABELS ---------- */
 .song-label {
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
+    -fx-text-fill: #DDDDDD;
+    -fx-font-size: 14px;
     -fx-padding: 3 8;
-    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-color: rgba(255, 255, 255, 0.08);
     -fx-background-radius: 10;
 }
 
+/* ---------- SCROLL PANE TRANSPARENCY ---------- */
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
