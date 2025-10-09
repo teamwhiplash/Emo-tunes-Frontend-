@@ -37,7 +37,7 @@ public class MusicAppLoginController {
             System.out.println("Logo not found!");
         }
 
-       spotifyButton.setOnAction(e -> openSpotifyLogin());
+      spotifyButton.setOnAction(e -> openSpotifyLogin());
 //      UserInfo userInfo = new UserInfo(1,"Tester","tester@gmail.com");
 //      spotifyButton.setOnAction(e -> navigateToLanding(userInfo));
 //      SessionManager.getInstance().setUser(userInfo);

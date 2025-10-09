@@ -24,7 +24,7 @@ import java.util.Map;
 import com.emo_tunes.javafxapp.UserInfo;
 
 
-public class PlaylistPageController {
+public class PlaylistPageController implements UserAwareController {
 
     @FXML
     private VBox playlistContainer;
